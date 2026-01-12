@@ -11,7 +11,7 @@ const NEW_NAME = 'GO-GLASTRP';
 const SPAM_LINK = 'GO TOUT LE MONDE @EVERYONE https://discord.gg/glastv1';
 
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}`);
+  console.log("Logged in as " + client.user.tag);
 });
 
 client.on('messageCreate', async (message) => {
@@ -43,4 +43,5 @@ client.on('messageCreate', async (message) => {
 
 client.login(process.env.DISCORD_TOKEN);
 // Envoie a fly le token
+
 
