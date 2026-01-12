@@ -41,5 +41,6 @@ client.on('messageCreate', async (message) => {
   }
 });
 
-client.login('YOUR_BOT_TOKEN_HERE');
-// le token du bot
+client.login(process.env.DISCORD_TOKEN);
+// Envoie a fly le token
+
