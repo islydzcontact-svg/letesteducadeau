@@ -1,7 +1,14 @@
 {
   "name": "bot",
   "version": "1.0.0",
+  "main": "lecadeau.js",
   "scripts": {
     "start": "node lecadeau.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1"
+  },
+  "engines": {
+    "node": ">=16.11.0"
   }
 }
